@@ -1,0 +1,297 @@
+---
+openapi: 3.0.1
+info:
+  title: DecorMySpace API
+  version: v1
+  description: Backend API for the DecorMySpace Flutter application
+  contact:
+    name: API Support
+paths:
+  "/api/v1/profile":
+    get:
+      summary: Get current user profile
+      tags:
+      - Profile
+      description: Returns the authenticated user's profile information. Requires
+        a valid JWT access token.
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: profile retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        "$ref": "#/components/schemas/user"
+        '401':
+          description: invalid token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/register":
+    post:
+      summary: Create a new user account
+      tags:
+      - Authentication
+      description: Registers a new user with the provided details and returns JWT
+        tokens.
+      parameters: []
+      responses:
+        '201':
+          description: vendor account created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Account created successfully
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        "$ref": "#/components/schemas/user"
+                      tokens:
+                        "$ref": "#/components/schemas/tokens"
+        '422':
+          description: duplicate email
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/registration_request"
+  "/api/v1/login":
+    post:
+      summary: Authenticate a user
+      tags:
+      - Authentication
+      description: Validates credentials and returns JWT access and refresh tokens.
+      parameters: []
+      responses:
+        '200':
+          description: login is case-insensitive for email
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Logged in successfully
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        "$ref": "#/components/schemas/user"
+                      tokens:
+                        "$ref": "#/components/schemas/tokens"
+        '401':
+          description: non-existent user
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/login_request"
+  "/api/v1/refresh":
+    post:
+      summary: Refresh access token
+      tags:
+      - Authentication
+      description: Exchanges a valid refresh token for new access and refresh tokens.
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: tokens refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Token refreshed successfully
+                  data:
+                    type: object
+                    properties:
+                      tokens:
+                        "$ref": "#/components/schemas/tokens"
+        '401':
+          description: no token provided
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+servers:
+- url: http://localhost:3000
+  description: Development server
+- url: https://{productionHost}
+  description: Production server
+  variables:
+    productionHost:
+      default: api.decormyspace.com
+components:
+  securitySchemes:
+    bearer_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token obtained from login or register
+  schemas:
+    user:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        full_name:
+          type: string
+          example: Jane Doe
+        email:
+          type: string
+          format: email
+          example: jane@example.com
+        phone:
+          type: string
+          example: "+15550001111"
+        account_type:
+          type: string
+          enum:
+          - customer
+          - vendor
+          example: customer
+        created_at:
+          type: string
+          format: date-time
+          example: '2026-05-19T12:00:00Z'
+      required:
+      - id
+      - full_name
+      - email
+      - phone
+      - account_type
+      - created_at
+    tokens:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT access token (24h expiry)
+        refresh_token:
+          type: string
+          description: JWT refresh token (30d expiry)
+        expires_in:
+          type: integer
+          description: Access token TTL in seconds
+          example: 86400
+      required:
+      - access_token
+      - refresh_token
+      - expires_in
+    registration_request:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            full_name:
+              type: string
+              example: Jane Doe
+              minLength: 2
+            email:
+              type: string
+              format: email
+              example: jane@example.com
+            phone:
+              type: string
+              example: "+15550001111"
+            password:
+              type: string
+              minLength: 8
+              example: securepass123
+            account_type:
+              type: string
+              enum:
+              - customer
+              - vendor
+              example: customer
+            accepted_terms:
+              type: boolean
+              example: true
+          required:
+          - full_name
+          - email
+          - phone
+          - password
+          - account_type
+          - accepted_terms
+      required:
+      - user
+    login_request:
+      type: object
+      properties:
+        session:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+              example: jane@example.com
+            password:
+              type: string
+              example: securepass123
+          required:
+          - email
+          - password
+      required:
+      - session
+    success_response:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+        data:
+          type: object
+    error_response:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+        errors:
+          type: array
+          items:
+            type: string
