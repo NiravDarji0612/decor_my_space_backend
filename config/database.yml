@@ -21,7 +21,6 @@ default: &default
   username: postgres
   password: root
 
-
 development:
   <<: *default
   database: decor_my_space_development
@@ -86,3 +85,15 @@ production:
     database: decor_my_space_production
     username: <%= ENV["DECOR_MY_SPACE_DATABASE_USERNAME"] %>
     password: <%= ENV["DECOR_MY_SPACE_DATABASE_PASSWORD"] %>
+  cache:
+    <<: *primary_production
+    database: decor_my_space_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: decor_my_space_production_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    database: decor_my_space_production_cable
+    migrations_paths: db/cable_migrate
