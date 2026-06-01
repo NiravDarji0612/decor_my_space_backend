@@ -3,7 +3,7 @@ module Api
     class SessionsController < BaseController
       include Authenticatable
 
-      skip_before_action :authenticate_user!, only: :create
+      skip_before_action :authenticate_user!, only: %i[create refresh]
 
       def create
         user = User.find_by(email: login_params[:email]&.strip&.downcase)
@@ -33,7 +33,7 @@ module Api
           return render_error(message: "Invalid token type. Use refresh token.", status: :unauthorized)
         end
 
-        user = User.find_by(id: payload[:user_id])
+        user = User.active.find_by(id: payload[:user_id])
         unless user
           return render_error(message: "User not found", status: :unauthorized)
         end
@@ -45,6 +45,12 @@ module Api
         )
       rescue AuthenticationError => e
         render_error(message: e.message, status: :unauthorized)
+      end
+
+      def destroy
+        # Stateless JWT — client should discard tokens; reserved for future token
+        # blacklist (e.g., Redis-backed jti revocation list).
+        render_success(message: "Logged out")
       end
 
       private

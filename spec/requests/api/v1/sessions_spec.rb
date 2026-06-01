@@ -128,4 +128,32 @@ RSpec.describe 'Sessions API', type: :request do
       end
     end
   end
+
+  path '/api/v1/logout' do
+    delete 'Log out current session' do
+      tags 'Authentication'
+      description 'Statelessly acknowledges logout. Client should discard tokens. ' \
+                  'Reserved for future server-side JWT revocation.'
+      produces 'application/json'
+      security [bearer_auth: []]
+
+      response '200', 'logout acknowledged' do
+        schema '$ref' => '#/components/schemas/success_response'
+
+        let(:Authorization) { "Bearer #{JwtService.generate_tokens(user)[:access_token]}" }
+
+        run_test! do |response|
+          expect(JSON.parse(response.body)['success']).to be true
+        end
+      end
+
+      response '401', 'missing token' do
+        schema '$ref' => '#/components/schemas/error_response'
+
+        let(:Authorization) { '' }
+
+        run_test!
+      end
+    end
+  end
 end

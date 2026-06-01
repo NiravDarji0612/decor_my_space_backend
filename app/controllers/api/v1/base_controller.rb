@@ -1,12 +1,15 @@
 module Api
   module V1
     class BaseController < ApplicationController
+      include Paginatable
+
       private
 
-      def render_success(data: nil, message: nil, status: :ok)
+      def render_success(data: nil, message: nil, status: :ok, meta: nil)
         body = { success: true }
         body[:message] = message if message
-        body[:data] = data if data
+        body[:data]    = data    if data
+        body[:meta]    = meta    if meta
         render json: body, status: status
       end
 
@@ -20,6 +23,12 @@ module Api
         opts = {}
         opts[:serializer] = serializer if serializer
         ActiveModelSerializers::SerializableResource.new(resource, opts).as_json
+      end
+
+      def serialize_collection(collection, serializer:)
+        ActiveModelSerializers::SerializableResource.new(
+          collection, each_serializer: serializer
+        ).as_json
       end
     end
   end

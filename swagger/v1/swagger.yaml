@@ -7,6 +7,1027 @@ info:
   contact:
     name: API Support
 paths:
+  "/api/v1/add_ons":
+    get:
+      summary: List active booking add-ons
+      tags:
+      - Catalogue
+      responses:
+        '200':
+          description: add-ons returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      add_ons:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/add_on"
+  "/api/v1/addresses":
+    get:
+      summary: List addresses for current user
+      tags:
+      - Addresses
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: addresses returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      addresses:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/address"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+    post:
+      summary: Create an address
+      tags:
+      - Addresses
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: address created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      address:
+                        "$ref": "#/components/schemas/address"
+        '422':
+          description: validation errors
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/address_request"
+  "/api/v1/addresses/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Get an address
+      tags:
+      - Addresses
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: address returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      address:
+                        "$ref": "#/components/schemas/address"
+        '404':
+          description: address not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+    patch:
+      summary: Update an address
+      tags:
+      - Addresses
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: address updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      address:
+                        "$ref": "#/components/schemas/address"
+        '404':
+          description: address not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/address_request"
+    delete:
+      summary: Delete an address
+      tags:
+      - Addresses
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: address removed
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/success_response"
+        '404':
+          description: address not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/addresses/{id}/default":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Mark an address as default
+      tags:
+      - Addresses
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: default updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      address:
+                        "$ref": "#/components/schemas/address"
+        '404':
+          description: address not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/bookings":
+    parameters:
+    - name: status
+      in: query
+      required: false
+      enum:
+      - upcoming
+      - completed
+      - cancelled
+      schema:
+        type: string
+    - name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+    - name: per_page
+      in: query
+      required: false
+      schema:
+        type: integer
+    get:
+      summary: List current user bookings
+      tags:
+      - Bookings
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: bookings returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      bookings:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/booking"
+                  meta:
+                    "$ref": "#/components/schemas/pagination_meta"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+    post:
+      summary: Create a booking
+      tags:
+      - Bookings
+      description: Creates a booking. Pricing (subtotal, 18% GST, 30% advance) is
+        computed server-side.
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: booking created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    example: Booking confirmed
+                  data:
+                    type: object
+                    properties:
+                      booking:
+                        "$ref": "#/components/schemas/booking"
+        '404':
+          description: design not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '422':
+          description: validation errors
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/booking_request"
+  "/api/v1/bookings/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Get booking details
+      tags:
+      - Bookings
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: booking returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      booking:
+                        "$ref": "#/components/schemas/booking"
+        '404':
+          description: booking not found or not owned
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/bookings/{id}/cancel":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Cancel a booking
+      tags:
+      - Bookings
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: booking cancelled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    example: Booking cancelled
+                  data:
+                    type: object
+                    properties:
+                      booking:
+                        "$ref": "#/components/schemas/booking"
+        '422':
+          description: already cancelled
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '404':
+          description: booking not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/cancel_booking_request"
+  "/api/v1/categories":
+    get:
+      summary: List active categories
+      tags:
+      - Catalogue
+      description: Returns active categories ordered by position.
+      responses:
+        '200':
+          description: categories returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      categories:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/category"
+  "/api/v1/categories/{slug}":
+    parameters:
+    - name: slug
+      in: path
+      required: true
+      example: wedding
+      schema:
+        type: string
+    get:
+      summary: Get a category by slug
+      tags:
+      - Catalogue
+      responses:
+        '200':
+          description: category returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      category:
+                        "$ref": "#/components/schemas/category"
+        '404':
+          description: category not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/categories/{slug}/designs":
+    parameters:
+    - name: slug
+      in: path
+      required: true
+      example: wedding
+      schema:
+        type: string
+    - name: sort
+      in: query
+      required: false
+      enum:
+      - popular
+      - price_asc
+      - price_desc
+      - rating
+      schema:
+        type: string
+    - name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+    - name: per_page
+      in: query
+      required: false
+      schema:
+        type: integer
+    get:
+      summary: List designs in a category
+      tags:
+      - Catalogue
+      responses:
+        '200':
+          description: designs returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      category:
+                        "$ref": "#/components/schemas/category"
+                      designs:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/design_summary"
+                  meta:
+                    "$ref": "#/components/schemas/pagination_meta"
+        '404':
+          description: category not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/decorators":
+    parameters:
+    - name: city
+      in: query
+      required: false
+      schema:
+        type: string
+    - name: q
+      in: query
+      required: false
+      schema:
+        type: string
+    - name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+    - name: per_page
+      in: query
+      required: false
+      schema:
+        type: integer
+    get:
+      summary: List decorators (vendors)
+      tags:
+      - Catalogue
+      responses:
+        '200':
+          description: decorators returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      decorators:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/decorator"
+                  meta:
+                    "$ref": "#/components/schemas/pagination_meta"
+  "/api/v1/decorators/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Get decorator details with design gallery
+      tags:
+      - Catalogue
+      responses:
+        '200':
+          description: decorator details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      decorator:
+                        "$ref": "#/components/schemas/decorator_detail"
+        '404':
+          description: decorator not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/designs":
+    parameters:
+    - name: slug
+      in: query
+      required: false
+      description: Filter by category slug
+      schema:
+        type: string
+    - name: q
+      in: query
+      required: false
+      description: Search term
+      schema:
+        type: string
+    - name: sort
+      in: query
+      required: false
+      enum:
+      - popular
+      - price_asc
+      - price_desc
+      - rating
+      schema:
+        type: string
+    - name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+    - name: per_page
+      in: query
+      required: false
+      schema:
+        type: integer
+    get:
+      summary: List designs
+      tags:
+      - Catalogue
+      responses:
+        '200':
+          description: designs returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      designs:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/design_summary"
+                  meta:
+                    "$ref": "#/components/schemas/pagination_meta"
+  "/api/v1/designs/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Get design details
+      tags:
+      - Catalogue
+      responses:
+        '200':
+          description: design details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      design:
+                        "$ref": "#/components/schemas/design"
+        '404':
+          description: design not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/home/feed":
+    parameters:
+    - name: city
+      in: query
+      required: false
+      schema:
+        type: string
+    get:
+      summary: Aggregated home feed
+      tags:
+      - Home
+      description: Returns categories, featured designs, trending designs and nearby
+        vendors.
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: feed returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      categories:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/category"
+                      featured_designs:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/design_summary"
+                      trending_designs:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/design_summary"
+                      nearby_vendors:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/decorator"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/notifications":
+    parameters:
+    - name: unread
+      in: query
+      required: false
+      schema:
+        type: boolean
+    - name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+    - name: per_page
+      in: query
+      required: false
+      schema:
+        type: integer
+    get:
+      summary: List notifications
+      tags:
+      - Notifications
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: notifications returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      notifications:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/notification"
+                      unread_count:
+                        type: integer
+                        example: 1
+                  meta:
+                    "$ref": "#/components/schemas/pagination_meta"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/notifications/read_all":
+    patch:
+      summary: Mark all notifications as read
+      tags:
+      - Notifications
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: marked as read
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/success_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/notifications/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    delete:
+      summary: Dismiss a notification
+      tags:
+      - Notifications
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: dismissed
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/success_response"
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/payment_methods":
+    get:
+      summary: List payment methods
+      tags:
+      - Payment methods
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: payment methods returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      payment_methods:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/payment_method"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+    post:
+      summary: Add a payment method
+      tags:
+      - Payment methods
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: payment method added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      payment_method:
+                        "$ref": "#/components/schemas/payment_method"
+        '422':
+          description: validation errors
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/payment_method_request"
+  "/api/v1/payment_methods/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    delete:
+      summary: Remove a payment method
+      tags:
+      - Payment methods
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: removed
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/success_response"
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/payment_methods/{id}/default":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Mark a payment method as default
+      tags:
+      - Payment methods
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: default updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      payment_method:
+                        "$ref": "#/components/schemas/payment_method"
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/preferences":
+    get:
+      summary: Get user preferences
+      tags:
+      - Preferences
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: preferences returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      preferences:
+                        "$ref": "#/components/schemas/user_preference"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+    patch:
+      summary: Update user preferences
+      tags:
+      - Preferences
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: preferences updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      preferences:
+                        "$ref": "#/components/schemas/user_preference"
+        '422':
+          description: invalid locale
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/preferences_request"
   "/api/v1/profile":
     get:
       summary: Get current user profile
@@ -38,6 +1059,236 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/error_response"
+    patch:
+      summary: Update profile
+      tags:
+      - Profile
+      description: Updates editable profile fields for the authenticated user.
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: profile updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Profile updated
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        "$ref": "#/components/schemas/user"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '422':
+          description: invalid username
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/profile_update_request"
+  "/api/v1/account":
+    delete:
+      summary: Delete (soft-delete) the current account
+      tags:
+      - Profile
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: account deleted
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/success_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/profile/password":
+    patch:
+      summary: Change password
+      tags:
+      - Profile
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: password changed
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/success_response"
+        '422':
+          description: new password mismatch
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/change_password_request"
+  "/api/v1/profile/email/request":
+    post:
+      summary: Request OTP to change email
+      tags:
+      - Profile
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: otp issued
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/success_response"
+        '422':
+          description: email already in use
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/request_email_change_request"
+  "/api/v1/profile/email/confirm":
+    post:
+      summary: Confirm email change with OTP
+      tags:
+      - Profile
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: email updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Email updated
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        "$ref": "#/components/schemas/user"
+        '422':
+          description: invalid otp code
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/confirm_email_change_request"
+  "/api/v1/profile/phone/request":
+    post:
+      summary: Request OTP to change phone number
+      tags:
+      - Profile
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: otp issued
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/success_response"
+        '422':
+          description: invalid phone
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/request_phone_change_request"
+  "/api/v1/profile/phone/confirm":
+    post:
+      summary: Confirm phone change with OTP
+      tags:
+      - Profile
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: phone updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Phone updated
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        "$ref": "#/components/schemas/user"
+        '422':
+          description: invalid otp code
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/confirm_phone_change_request"
   "/api/v1/register":
     post:
       summary: Create a new user account
@@ -78,6 +1329,178 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/registration_request"
+  "/api/v1/bookings/{booking_id}/review":
+    parameters:
+    - name: booking_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Submit a review for a completed booking
+      tags:
+      - Reviews
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: review created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    example: Thanks for your review
+                  data:
+                    type: object
+                    properties:
+                      review:
+                        "$ref": "#/components/schemas/review_object"
+        '422':
+          description: cannot review an upcoming booking
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '404':
+          description: booking not owned by user
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/review_request"
+  "/api/v1/saved_designs":
+    parameters:
+    - name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+    - name: per_page
+      in: query
+      required: false
+      schema:
+        type: integer
+    get:
+      summary: List saved designs (favorites)
+      tags:
+      - Favorites
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: favorites returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      saved_designs:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/saved_design"
+                  meta:
+                    "$ref": "#/components/schemas/pagination_meta"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+    post:
+      summary: Save a design to favorites
+      tags:
+      - Favorites
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: design saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    example: Design saved
+                  data:
+                    type: object
+                    properties:
+                      saved_design:
+                        "$ref": "#/components/schemas/saved_design"
+        '404':
+          description: design not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/saved_design_request"
+  "/api/v1/saved_designs/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    delete:
+      summary: Remove a saved design
+      tags:
+      - Favorites
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: design removed
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/success_response"
+        '404':
+          description: not found in user favorites
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
   "/api/v1/login":
     post:
       summary: Authenticate a user
@@ -150,6 +1573,217 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/error_response"
+  "/api/v1/logout":
+    delete:
+      summary: Log out current session
+      tags:
+      - Authentication
+      description: Statelessly acknowledges logout. Client should discard tokens.
+        Reserved for future server-side JWT revocation.
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: logout acknowledged
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/success_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+  "/api/v1/support_tickets":
+    post:
+      summary: Submit a support ticket
+      tags:
+      - Support
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: ticket created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    example: Support ticket submitted
+                  data:
+                    type: object
+                    properties:
+                      support_ticket:
+                        "$ref": "#/components/schemas/support_ticket"
+        '422':
+          description: validation errors
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/support_ticket_request"
+  "/api/v1/users/{id}/location":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Update the current user location
+      tags:
+      - Geolocation
+      description: 'Persists the user current coordinates and appends a row to the
+        location history. Authorisation: a user can only update their own location.'
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: location updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Location updated successfully
+                required:
+                - success
+                - message
+        '403':
+          description: cannot update another user location
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '422':
+          description: missing coordinates
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '404':
+          description: user not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/user_location_request"
+  "/api/v1/vendors/nearby":
+    parameters:
+    - name: latitude
+      in: query
+      required: true
+      example: 23.0225
+      schema:
+        type: number
+    - name: longitude
+      in: query
+      required: true
+      example: 72.5714
+      schema:
+        type: number
+    - name: radius
+      in: query
+      required: false
+      description: Radius in km (default 5).
+      schema:
+        type: number
+    - name: category
+      in: query
+      required: false
+      schema:
+        type: string
+    - name: min_rating
+      in: query
+      required: false
+      schema:
+        type: number
+    - name: open
+      in: query
+      required: false
+      schema:
+        type: boolean
+    - name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+    - name: per_page
+      in: query
+      required: false
+      schema:
+        type: integer
+    get:
+      summary: Fetch vendors within a radius, sorted by distance
+      tags:
+      - Geolocation
+      description: Uses PostGIS ST_DWithin / ST_Distance when available; otherwise
+        falls back to Haversine SQL.
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: empty when no vendors in radius
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      vendors:
+                        type: array
+                        items:
+                          "$ref": "#/components/schemas/nearby_vendor"
+                  meta:
+                    "$ref": "#/components/schemas/nearby_meta"
+        '422':
+          description: missing coordinates
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
+        '401':
+          description: missing token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/error_response"
 servers:
 - url: http://localhost:3000
   description: Development server
@@ -166,6 +1800,44 @@ components:
       bearerFormat: JWT
       description: JWT access token obtained from login or register
   schemas:
+    success_response:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+        data:
+          type: object
+    error_response:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: Validation failed
+        errors:
+          type: array
+          items:
+            type: string
+    pagination_meta:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        per_page:
+          type: integer
+          example: 20
+        total:
+          type: integer
+          example: 42
+        total_pages:
+          type: integer
+          example: 3
     user:
       type: object
       properties:
@@ -188,6 +1860,27 @@ components:
           - customer
           - vendor
           example: customer
+        username:
+          type: string
+          nullable: true
+          example: jane_d
+        city:
+          type: string
+          nullable: true
+          example: Pune
+        bio:
+          type: string
+          nullable: true
+        avatar_url:
+          type: string
+          nullable: true
+          example: https://i.pravatar.cc/200
+        email_verified:
+          type: boolean
+          example: false
+        phone_verified:
+          type: boolean
+          example: false
         created_at:
           type: string
           format: date-time
@@ -273,25 +1966,945 @@ components:
           - password
       required:
       - session
-    success_response:
+    profile_update_request:
       type: object
       properties:
-        success:
+        user:
+          type: object
+          properties:
+            full_name:
+              type: string
+            username:
+              type: string
+            city:
+              type: string
+            bio:
+              type: string
+            avatar_url:
+              type: string
+      required:
+      - user
+    change_password_request:
+      type: object
+      properties:
+        password:
+          type: object
+          properties:
+            current_password:
+              type: string
+              example: oldpassword123
+            new_password:
+              type: string
+              example: newpassword123
+            new_password_confirmation:
+              type: string
+              example: newpassword123
+          required:
+          - current_password
+          - new_password
+          - new_password_confirmation
+      required:
+      - password
+    request_email_change_request:
+      type: object
+      properties:
+        email:
+          type: object
+          properties:
+            new_email:
+              type: string
+              format: email
+              example: new@example.com
+          required:
+          - new_email
+      required:
+      - email
+    confirm_email_change_request:
+      type: object
+      properties:
+        code:
+          type: string
+          example: '123456'
+        new_email:
+          type: string
+          format: email
+          example: new@example.com
+      required:
+      - code
+      - new_email
+    request_phone_change_request:
+      type: object
+      properties:
+        phone:
+          type: object
+          properties:
+            new_phone:
+              type: string
+              example: "+15550009999"
+          required:
+          - new_phone
+      required:
+      - phone
+    confirm_phone_change_request:
+      type: object
+      properties:
+        code:
+          type: string
+          example: '123456'
+        new_phone:
+          type: string
+          example: "+15550009999"
+      required:
+      - code
+      - new_phone
+    category:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        slug:
+          type: string
+          example: wedding
+        title:
+          type: string
+          example: Wedding
+        icon_key:
+          type: string
+          nullable: true
+          example: celebration
+        tint_hex:
+          type: string
+          nullable: true
+          example: "#FCE4EC"
+        icon_color_hex:
+          type: string
+          nullable: true
+          example: "#C2185B"
+        cover_url:
+          type: string
+          nullable: true
+        design_count:
+          type: integer
+          example: 12
+        position:
+          type: integer
+          example: 1
+      required:
+      - id
+      - slug
+      - title
+    decorator:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 7
+        name:
+          type: string
+          example: Bloom Decor Studio
+        specialty:
+          type: string
+          nullable: true
+          example: Wedding specialist
+        tagline:
+          type: string
+          nullable: true
+        rating_avg:
+          type: number
+          format: float
+          example: 4.8
+        review_count:
+          type: integer
+          example: 124
+        avatar_url:
+          type: string
+          nullable: true
+        hourly_rate_rupees:
+          type: number
+          format: float
+          example: 2500.0
+        area:
+          type: string
+          nullable: true
+          example: Koregaon Park
+        city:
+          type: string
+          nullable: true
+          example: Pune
+        phone:
+          type: string
+          nullable: true
+        latitude:
+          type: number
+          nullable: true
+        longitude:
+          type: number
+          nullable: true
+      required:
+      - id
+      - name
+      - rating_avg
+      - review_count
+    decorator_detail:
+      allOf:
+      - "$ref": "#/components/schemas/decorator"
+      - type: object
+        properties:
+          bio:
+            type: string
+            nullable: true
+          designs:
+            type: array
+            items:
+              "$ref": "#/components/schemas/design_summary"
+    design_summary:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 42
+        title:
+          type: string
+          example: Royal Mandap Floral Setup
+        subtitle:
+          type: string
+          nullable: true
+        price_rupees:
+          type: integer
+          example: 45000
+        currency:
+          type: string
+          example: INR
+        rating_avg:
+          type: number
+          format: float
+          example: 4.9
+        review_count:
+          type: integer
+          example: 56
+        hero_image_url:
+          type: string
+          nullable: true
+        available:
           type: boolean
           example: true
-        message:
-          type: string
-        data:
-          type: object
-    error_response:
-      type: object
-      properties:
-        success:
+        featured:
+          type: boolean
+          example: true
+        trending:
           type: boolean
           example: false
-        error:
+        vendor_name:
           type: string
-        errors:
+          nullable: true
+          example: Bloom Decor Studio
+        category_slug:
+          type: string
+          nullable: true
+          example: wedding
+      required:
+      - id
+      - title
+      - price_rupees
+      - currency
+      - available
+    design:
+      allOf:
+      - "$ref": "#/components/schemas/design_summary"
+      - type: object
+        properties:
+          description:
+            type: string
+            nullable: true
+          gallery:
+            type: array
+            items:
+              type: string
+          inclusions:
+            type: array
+            items:
+              type: object
+              properties:
+                label:
+                  type: string
+                  example: Floral mandap
+                icon_key:
+                  type: string
+                  nullable: true
+                  example: local_florist
+          decorator:
+            "$ref": "#/components/schemas/decorator"
+          category:
+            "$ref": "#/components/schemas/category"
+    add_on:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        key:
+          type: string
+          example: photography
+        label:
+          type: string
+          example: Photography Package
+        description:
+          type: string
+          nullable: true
+        price_rupees:
+          type: integer
+          example: 15000
+      required:
+      - id
+      - key
+      - label
+      - price_rupees
+    booking:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 101
+        booking_reference:
+          type: string
+          example: DMS-AB12CD34
+        status:
+          type: string
+          enum:
+          - upcoming
+          - completed
+          - cancelled
+        event_type:
+          type: string
+          example: Wedding
+        event_date:
+          type: string
+          format: date
+          example: '2026-08-21'
+        time_slot:
+          type: string
+          example: 18:00-22:00
+        expected_guests:
+          type: integer
+          example: 250
+        venue_name:
+          type: string
+          example: Taj Banquet Hall
+        venue_address_line1:
+          type: string
+          example: MG Road
+        venue_address_line2:
+          type: string
+          nullable: true
+        contact_full_name:
+          type: string
+          example: Riya Shah
+        contact_phone:
+          type: string
+          example: "+919812345678"
+        contact_email:
+          type: string
+          format: email
+        special_instructions:
+          type: string
+          nullable: true
+        subtotal_rupees:
+          type: integer
+          example: 60000
+        gst_rupees:
+          type: integer
+          example: 10800
+        total_rupees:
+          type: integer
+          example: 70800
+        advance_paid_rupees:
+          type: integer
+          example: 21240
+        balance_rupees:
+          type: integer
+          example: 49560
+        payment_method:
+          type: string
+          enum:
+          - card
+          - upi
+          - netbanking
+        payment_status:
+          type: string
+          enum:
+          - pending
+          - paid
+          - refunded
+        placed_on:
+          type: string
+          format: date-time
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancellation_reason:
+          type: string
+          nullable: true
+        design:
+          "$ref": "#/components/schemas/design_summary"
+        decorator:
+          "$ref": "#/components/schemas/decorator"
+        add_ons:
+          type: array
+          items:
+            "$ref": "#/components/schemas/add_on"
+      required:
+      - id
+      - booking_reference
+      - status
+      - event_type
+      - event_date
+      - total_rupees
+    booking_request:
+      type: object
+      properties:
+        booking:
+          type: object
+          properties:
+            design_id:
+              type: integer
+              example: 42
+            event_type:
+              type: string
+              example: Wedding
+            event_date:
+              type: string
+              format: date
+              example: '2026-08-21'
+            time_slot:
+              type: string
+              example: 18:00-22:00
+            expected_guests:
+              type: integer
+              example: 250
+            venue_name:
+              type: string
+              example: Taj Banquet Hall
+            venue_address_line1:
+              type: string
+              example: MG Road
+            venue_address_line2:
+              type: string
+              example: Pune
+            contact_full_name:
+              type: string
+              example: Riya Shah
+            contact_phone:
+              type: string
+              example: "+919812345678"
+            contact_email:
+              type: string
+              format: email
+              example: riya@example.com
+            special_instructions:
+              type: string
+              example: Use white florals only
+            payment_method:
+              type: string
+              enum:
+              - card
+              - upi
+              - netbanking
+              example: upi
+            add_on_ids:
+              type: array
+              items:
+                type: integer
+              example:
+              - 1
+              - 3
+          required:
+          - design_id
+          - event_type
+          - event_date
+          - time_slot
+          - venue_name
+          - venue_address_line1
+          - contact_full_name
+          - contact_phone
+          - contact_email
+          - payment_method
+      required:
+      - booking
+    cancel_booking_request:
+      type: object
+      properties:
+        reason:
+          type: string
+          example: Plans changed
+    review_object:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 11
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 5
+        comment:
+          type: string
+          nullable: true
+        tags:
           type: array
           items:
             type: string
+          example:
+          - on-time
+          - professional
+        would_recommend:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - rating
+    review_request:
+      type: object
+      properties:
+        review:
+          type: object
+          properties:
+            rating:
+              type: integer
+              minimum: 1
+              maximum: 5
+              example: 5
+            comment:
+              type: string
+              example: Beautiful work, very professional
+            tags:
+              type: array
+              items:
+                type: string
+              example:
+              - on-time
+              - creative
+            would_recommend:
+              type: boolean
+              example: true
+          required:
+          - rating
+      required:
+      - review
+    saved_design:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+        created_at:
+          type: string
+          format: date-time
+        design:
+          "$ref": "#/components/schemas/design_summary"
+      required:
+      - id
+      - design
+    saved_design_request:
+      type: object
+      properties:
+        design_id:
+          type: integer
+          example: 42
+      required:
+      - design_id
+    address:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 5
+        label:
+          type: string
+          example: Home
+        recipient_name:
+          type: string
+          example: Riya Shah
+        line1:
+          type: string
+          example: 12 MG Road
+        line2:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+          example: Pune
+        state:
+          type: string
+          nullable: true
+          example: MH
+        postal_code:
+          type: string
+          nullable: true
+          example: '411001'
+        country:
+          type: string
+          example: IN
+        phone:
+          type: string
+          example: "+919812345678"
+        is_default:
+          type: boolean
+          example: true
+      required:
+      - id
+      - label
+      - recipient_name
+      - line1
+      - country
+      - phone
+    address_request:
+      type: object
+      properties:
+        address:
+          type: object
+          properties:
+            label:
+              type: string
+              example: Home
+            recipient_name:
+              type: string
+              example: Riya Shah
+            line1:
+              type: string
+              example: 12 MG Road
+            line2:
+              type: string
+              example: Near MG Metro
+            city:
+              type: string
+              example: Pune
+            state:
+              type: string
+              example: MH
+            postal_code:
+              type: string
+              example: '411001'
+            country:
+              type: string
+              example: IN
+            phone:
+              type: string
+              example: "+919812345678"
+            is_default:
+              type: boolean
+              example: false
+          required:
+          - label
+          - recipient_name
+          - line1
+          - country
+          - phone
+      required:
+      - address
+    payment_method:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 8
+        kind:
+          type: string
+          enum:
+          - card
+          - upi
+          - wallet
+          example: card
+        title:
+          type: string
+          example: Visa ending 4242
+        subtitle:
+          type: string
+          nullable: true
+          example: Personal
+        last4:
+          type: string
+          nullable: true
+          example: '4242'
+        is_default:
+          type: boolean
+          example: true
+        expires_on:
+          type: string
+          format: date
+          nullable: true
+      required:
+      - id
+      - kind
+      - title
+      - is_default
+    payment_method_request:
+      type: object
+      properties:
+        payment_method:
+          type: object
+          properties:
+            kind:
+              type: string
+              enum:
+              - card
+              - upi
+              - wallet
+            title:
+              type: string
+              example: Visa ending 4242
+            subtitle:
+              type: string
+              example: Personal
+            last4:
+              type: string
+              example: '4242'
+            provider_token:
+              type: string
+              example: tok_xxx
+            expires_on:
+              type: string
+              format: date
+              example: '2030-01-01'
+            is_default:
+              type: boolean
+              example: false
+          required:
+          - kind
+          - title
+      required:
+      - payment_method
+    notification:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 91
+        title:
+          type: string
+          example: Booking confirmed
+        body:
+          type: string
+          nullable: true
+        kind:
+          type: string
+          enum:
+          - system
+          - booking
+          - promotion
+          - payment
+        payload:
+          type: object
+          additionalProperties: true
+        unread:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - title
+      - kind
+      - unread
+      - created_at
+    user_preference:
+      type: object
+      properties:
+        locale:
+          type: string
+          enum:
+          - en
+          - ar
+          - hi
+          example: en
+        currency:
+          type: string
+          enum:
+          - INR
+          - USD
+          - EUR
+          - AED
+          example: INR
+        dark_mode:
+          type: boolean
+          example: false
+        location_services:
+          type: boolean
+          example: true
+        notify_bookings:
+          type: boolean
+          example: true
+        notify_promotions:
+          type: boolean
+          example: true
+        notify_system:
+          type: boolean
+          example: true
+    preferences_request:
+      type: object
+      properties:
+        preferences:
+          "$ref": "#/components/schemas/user_preference"
+      required:
+      - preferences
+    support_ticket:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 3
+        category:
+          type: string
+          example: Booking
+        subject:
+          type: string
+          example: Cannot cancel my booking
+        message:
+          type: string
+        status:
+          type: string
+          enum:
+          - open
+          - in_progress
+          - resolved
+          - closed
+          example: open
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - category
+      - subject
+      - status
+      - created_at
+    support_ticket_request:
+      type: object
+      properties:
+        support_ticket:
+          type: object
+          properties:
+            category:
+              type: string
+              example: Booking
+            subject:
+              type: string
+              example: Cannot cancel my booking
+            message:
+              type: string
+              example: I tried to cancel but got an error.
+          required:
+          - category
+          - subject
+          - message
+      required:
+      - support_ticket
+    user_location_request:
+      type: object
+      properties:
+        latitude:
+          type: number
+          format: float
+          example: 23.0225
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          format: float
+          example: 72.5714
+          minimum: -180
+          maximum: 180
+        accuracy_m:
+          type: number
+          format: float
+          example: 12.5
+          nullable: true
+        source:
+          type: string
+          example: client
+          nullable: true
+      required:
+      - latitude
+      - longitude
+    nearby_vendor:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 42
+        name:
+          type: string
+          example: Bloom Decor Studio
+        category:
+          type: string
+          nullable: true
+          example: wedding
+        specialty:
+          type: string
+          nullable: true
+        rating_avg:
+          type: number
+          format: float
+          example: 4.7
+        review_count:
+          type: integer
+          example: 124
+        open:
+          type: boolean
+          example: true
+        latitude:
+          type: number
+          format: float
+          example: 23.02
+        longitude:
+          type: number
+          format: float
+          example: 72.57
+        distance_m:
+          type: number
+          format: float
+          example: 1240.5
+        distance_km:
+          type: number
+          format: float
+          example: 1.241
+        distance_miles:
+          type: number
+          format: float
+          example: 0.771
+        avatar_url:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        area:
+          type: string
+          nullable: true
+      required:
+      - id
+      - name
+      - rating_avg
+      - open
+      - distance_m
+    nearby_meta:
+      allOf:
+      - "$ref": "#/components/schemas/pagination_meta"
+      - type: object
+        properties:
+          radius_m:
+            type: integer
+            example: 5000
+          engine:
+            type: string
+            enum:
+            - postgis
+            - haversine
+            example: postgis

@@ -12,10 +12,10 @@ module Authenticatable
     raise AuthenticationError, "Missing authorization token" if token.blank?
 
     payload = JwtService.decode(token)
-    @current_user = User.find_by(id: payload[:user_id])
+    raise AuthenticationError, "Invalid token type" if payload[:type] == "refresh"
+
+    @current_user = User.active.find_by(id: payload[:user_id])
     raise AuthenticationError, "User not found" unless @current_user
-  rescue AuthenticationError => e
-    render json: { error: e.message }, status: :unauthorized
   end
 
   def current_user
