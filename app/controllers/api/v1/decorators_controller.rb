@@ -1,8 +1,11 @@
 module Api
   module V1
     class DecoratorsController < BaseController
+      include LocationFilterable
+
       def index
-        scope = Decorator.active.nearby(params[:city])
+        city  = location_filtering_enabled? ? params[:city] : nil
+        scope = Decorator.active.nearby(city)
         scope = scope.where("LOWER(name) LIKE ?", "%#{params[:q].downcase}%") if params[:q].present?
         scope = scope.order(rating_avg: :desc)
         decorators, meta = paginate(scope)
