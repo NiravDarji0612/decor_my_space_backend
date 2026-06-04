@@ -30,7 +30,7 @@ CATEGORIES = [
   { slug: "engagement",     title: "Engagement",         icon_key: "diamond",       tint_hex: "#E8EAF6", icon_color_hex: "#283593", match_keys: %w[engagement ring proposal] },
   { slug: "mehendi",        title: "Mehendi",            icon_key: "brush",         tint_hex: "#F1F8E9", icon_color_hex: "#558B2F", match_keys: %w[mehendi henna] },
   { slug: "baby-shower",    title: "Baby Shower",        icon_key: "child_care",    tint_hex: "#E1F5FE", icon_color_hex: "#0277BD", match_keys: %w[baby shower godh-bharai] },
-  { slug: "naming",         title: "Naming Ceremony",    icon_key: "child_friendly",tint_hex: "#F9FBE7", icon_color_hex: "#9E9D24", match_keys: %w[naming namkaran] },
+  { slug: "naming",         title: "Naming Ceremony",    icon_key: "child_friendly", tint_hex: "#F9FBE7", icon_color_hex: "#9E9D24", match_keys: %w[naming namkaran] },
   { slug: "house-warming",  title: "House Warming",      icon_key: "home",          tint_hex: "#EFEBE9", icon_color_hex: "#5D4037", match_keys: %w[house-warming griha-pravesh] },
   { slug: "graduation",     title: "Graduation",         icon_key: "school",        tint_hex: "#E0F7FA", icon_color_hex: "#00838F", match_keys: %w[graduation convocation] },
   { slug: "retirement",     title: "Retirement",         icon_key: "elderly",       tint_hex: "#ECEFF1", icon_color_hex: "#455A64", match_keys: %w[retirement farewell] },
@@ -66,38 +66,38 @@ end
 puts "Seeding add-ons..."
 
 ADD_ONS = [
-  ["photography",       "Photography Package",      "Professional photography & videography",        15_000],
-  ["extended_hours",    "Extended Event Hours",     "Add 2 extra hours of service",                   5_000],
-  ["premium_florals",   "Premium Florals",          "Imported & exotic floral arrangements",         10_000],
-  ["drone_coverage",    "Drone Coverage",           "Aerial drone shots of the event",                8_500],
-  ["live_streaming",    "Live Streaming",           "Multi-camera stream to YouTube/Zoom",            7_500],
-  ["dj_console",        "DJ + Console",             "Professional DJ with sound console",            12_000],
-  ["live_band",         "Live Band (4 pieces)",     "4-piece live band for 2 hours",                 35_000],
-  ["dhol_player",       "Dhol Player",              "Traditional dhol player for baraat",             3_500],
-  ["mehendi_artist",    "Mehendi Artist",           "Bridal mehendi artist (one bride)",              6_500],
-  ["makeup_artist",     "Makeup Artist",            "Bridal HD makeup + draping",                    18_000],
-  ["sound_system",      "Premium Sound System",     "Line-array PA with monitors",                   14_000],
-  ["led_screens",       "LED Screens",              "Pair of 8x10 ft LED video walls",               22_000],
-  ["fog_machine",       "Fog & Cold Pyro",          "Stage fog and cold pyro effects",                4_500],
-  ["fireworks",         "Fireworks Show",           "10-minute professional fireworks display",      45_000],
-  ["valet_parking",     "Valet Parking",            "Valet service for up to 100 cars",              11_000],
-  ["security_team",     "Security Team",            "6 trained event security staff",                 9_000],
-  ["catering_premium",  "Premium Catering",         "Multi-cuisine premium menu (per 100 guests)",   60_000],
-  ["bar_setup",         "Bar Setup",                "Mocktail/cocktail bar with bartenders",         18_500],
-  ["dessert_counter",   "Dessert Counter",          "Live dessert and chocolate fountain",            8_000],
-  ["welcome_drinks",    "Welcome Drinks",           "Themed welcome drinks for guests",               3_000],
-  ["return_gifts",      "Return Gifts",             "Curated return gift hampers (50 nos)",          12_500],
-  ["wedding_invites",   "Designer Invites",         "Bespoke designer invitations (100 nos)",        15_000],
-  ["car_decoration",    "Wedding Car Decor",        "Floral decor for bride/groom car",               5_500],
-  ["entry_arch",        "Floral Entry Arch",        "Grand entry arch with seasonal florals",        14_000],
-  ["photo_booth",       "Photo Booth",              "Themed photo booth with props",                  6_000],
-  ["caricature_artist", "Caricature Artist",        "Live caricature artist for guests",              4_500],
-  ["tarot_reader",      "Tarot Reader",             "Tarot/palm reading entertainment",               3_500],
-  ["magician",          "Magician",                 "Close-up magic for cocktail hour",               5_500],
-  ["anchor_emcee",      "Anchor / Emcee",           "Professional bilingual event anchor",            8_000],
-  ["wedding_planner",   "Wedding Coordinator",      "Day-of wedding coordinator",                    20_000],
-  ["choreographer",     "Choreographer",            "Sangeet choreographer (3 sessions)",            12_000],
-  ["transport_shuttle", "Guest Shuttle",            "Air-conditioned guest shuttle service",         16_000]
+  [ "photography",       "Photography Package",      "Professional photography & videography",        15_000 ],
+  [ "extended_hours",    "Extended Event Hours",     "Add 2 extra hours of service",                   5_000 ],
+  [ "premium_florals",   "Premium Florals",          "Imported & exotic floral arrangements",         10_000 ],
+  [ "drone_coverage",    "Drone Coverage",           "Aerial drone shots of the event",                8_500 ],
+  [ "live_streaming",    "Live Streaming",           "Multi-camera stream to YouTube/Zoom",            7_500 ],
+  [ "dj_console",        "DJ + Console",             "Professional DJ with sound console",            12_000 ],
+  [ "live_band",         "Live Band (4 pieces)",     "4-piece live band for 2 hours",                 35_000 ],
+  [ "dhol_player",       "Dhol Player",              "Traditional dhol player for baraat",             3_500 ],
+  [ "mehendi_artist",    "Mehendi Artist",           "Bridal mehendi artist (one bride)",              6_500 ],
+  [ "makeup_artist",     "Makeup Artist",            "Bridal HD makeup + draping",                    18_000 ],
+  [ "sound_system",      "Premium Sound System",     "Line-array PA with monitors",                   14_000 ],
+  [ "led_screens",       "LED Screens",              "Pair of 8x10 ft LED video walls",               22_000 ],
+  [ "fog_machine",       "Fog & Cold Pyro",          "Stage fog and cold pyro effects",                4_500 ],
+  [ "fireworks",         "Fireworks Show",           "10-minute professional fireworks display",      45_000 ],
+  [ "valet_parking",     "Valet Parking",            "Valet service for up to 100 cars",              11_000 ],
+  [ "security_team",     "Security Team",            "6 trained event security staff",                 9_000 ],
+  [ "catering_premium",  "Premium Catering",         "Multi-cuisine premium menu (per 100 guests)",   60_000 ],
+  [ "bar_setup",         "Bar Setup",                "Mocktail/cocktail bar with bartenders",         18_500 ],
+  [ "dessert_counter",   "Dessert Counter",          "Live dessert and chocolate fountain",            8_000 ],
+  [ "welcome_drinks",    "Welcome Drinks",           "Themed welcome drinks for guests",               3_000 ],
+  [ "return_gifts",      "Return Gifts",             "Curated return gift hampers (50 nos)",          12_500 ],
+  [ "wedding_invites",   "Designer Invites",         "Bespoke designer invitations (100 nos)",        15_000 ],
+  [ "car_decoration",    "Wedding Car Decor",        "Floral decor for bride/groom car",               5_500 ],
+  [ "entry_arch",        "Floral Entry Arch",        "Grand entry arch with seasonal florals",        14_000 ],
+  [ "photo_booth",       "Photo Booth",              "Themed photo booth with props",                  6_000 ],
+  [ "caricature_artist", "Caricature Artist",        "Live caricature artist for guests",              4_500 ],
+  [ "tarot_reader",      "Tarot Reader",             "Tarot/palm reading entertainment",               3_500 ],
+  [ "magician",          "Magician",                 "Close-up magic for cocktail hour",               5_500 ],
+  [ "anchor_emcee",      "Anchor / Emcee",           "Professional bilingual event anchor",            8_000 ],
+  [ "wedding_planner",   "Wedding Coordinator",      "Day-of wedding coordinator",                    20_000 ],
+  [ "choreographer",     "Choreographer",            "Sangeet choreographer (3 sessions)",            12_000 ],
+  [ "transport_shuttle", "Guest Shuttle",            "Air-conditioned guest shuttle service",         16_000 ]
 ].freeze
 
 ADD_ONS.each do |key, label, desc, rupees|
@@ -107,14 +107,6 @@ ADD_ONS.each do |key, label, desc, rupees|
     a.price_cents = rupees * 100
     a.active = true
   end
-end
-
-# ---------------------------------------------------------------------------
-# Skip transactional seeding outside development
-# ---------------------------------------------------------------------------
-unless Rails.env.development?
-  puts "Done (catalogue only — skipped users/bookings outside development)."
-  return
 end
 
 # ---------------------------------------------------------------------------
@@ -154,10 +146,10 @@ customers = User.customer.where("email LIKE 'customer%@example.com'").order(:id)
 puts "Seeding vendor users + decorators..."
 
 STUDIO_PREFIXES = %w[Bloom Royal Magnolia Lotus Saffron Marigold Crimson Velvet Heritage Imperial Jasmine Orchid Pearl Indigo Twilight Aurora Mystic Celestial Coral Ember Mirage Opal Petal Sapphire Verve Whisper Zenith Mango Mosaic Nova Olive Plum Quartz Riviera Sunset].freeze
-STUDIO_SUFFIXES = ["Decor Studio", "Events", "Designs", "Weddings Co.", "Concepts", "Atelier", "Productions", "Curators", "Collective"].freeze
-SPECIALTIES = ["Wedding & Sangeet specialist", "Corporate & launch events", "Boutique birthdays", "Destination weddings", "Festive & cultural", "Modern luxury", "Traditional Indian", "Eco-friendly decor", "Floral storytelling", "Pastel & minimal"].freeze
-TAGLINES = ["Where florals tell your story", "Crafting unforgettable moments", "Modern decor, timeless memories", "Designed around your story", "Every detail, designed", "Bringing vision to life"].freeze
-AREAS = ["Koregaon Park", "Bandra West", "Indiranagar", "Banjara Hills", "Hauz Khas", "T. Nagar", "Park Street", "C-Scheme", "SG Highway", "Vijay Nagar"].freeze
+STUDIO_SUFFIXES = [ "Decor Studio", "Events", "Designs", "Weddings Co.", "Concepts", "Atelier", "Productions", "Curators", "Collective" ].freeze
+SPECIALTIES = [ "Wedding & Sangeet specialist", "Corporate & launch events", "Boutique birthdays", "Destination weddings", "Festive & cultural", "Modern luxury", "Traditional Indian", "Eco-friendly decor", "Floral storytelling", "Pastel & minimal" ].freeze
+TAGLINES = [ "Where florals tell your story", "Crafting unforgettable moments", "Modern decor, timeless memories", "Designed around your story", "Every detail, designed", "Bringing vision to life" ].freeze
+AREAS = [ "Koregaon Park", "Bandra West", "Indiranagar", "Banjara Hills", "Hauz Khas", "T. Nagar", "Park Street", "C-Scheme", "SG Highway", "Vijay Nagar" ].freeze
 
 35.times do |i|
   email       = "vendor#{i + 1}@example.com"
@@ -232,14 +224,14 @@ DESIGN_IMAGES = %w[
 ].freeze
 
 INCLUSION_PRESETS = [
-  [["Floral mandap", "local_florist"], ["Lighting setup", "lightbulb"], ["Audio system", "speaker"], ["3 hours service", "schedule"]],
-  [["Stage backdrop", "panorama"], ["Truss & lights", "lightbulb"], ["Sound system", "speaker"], ["DJ console", "music_note"]],
-  [["Floral entry arch", "local_florist"], ["Welcome counter", "table_restaurant"], ["Carpet runner", "linear_scale"], ["Photo backdrop", "photo_camera"]],
-  [["Theme props", "toys"], ["Balloon decor", "celebration"], ["Cake table", "cake"], ["Photo zone", "photo_camera"]],
-  [["Drapes & lighting", "lightbulb"], ["Floral centerpieces", "local_florist"], ["Stage setup", "panorama"], ["4 hours service", "schedule"]]
+  [ [ "Floral mandap", "local_florist" ], [ "Lighting setup", "lightbulb" ], [ "Audio system", "speaker" ], [ "3 hours service", "schedule" ] ],
+  [ [ "Stage backdrop", "panorama" ], [ "Truss & lights", "lightbulb" ], [ "Sound system", "speaker" ], [ "DJ console", "music_note" ] ],
+  [ [ "Floral entry arch", "local_florist" ], [ "Welcome counter", "table_restaurant" ], [ "Carpet runner", "linear_scale" ], [ "Photo backdrop", "photo_camera" ] ],
+  [ [ "Theme props", "toys" ], [ "Balloon decor", "celebration" ], [ "Cake table", "cake" ], [ "Photo zone", "photo_camera" ] ],
+  [ [ "Drapes & lighting", "lightbulb" ], [ "Floral centerpieces", "local_florist" ], [ "Stage setup", "panorama" ], [ "4 hours service", "schedule" ] ]
 ].freeze
 
-DESIGN_SUBTITLES = ["Hand-crafted for your big day", "Designed end-to-end", "Premium materials & florals", "Modern luxury setup", "Boutique signature design"].freeze
+DESIGN_SUBTITLES = [ "Hand-crafted for your big day", "Designed end-to-end", "Premium materials & florals", "Modern luxury setup", "Boutique signature design" ].freeze
 
 DESIGN_TITLES.each_with_index do |title, i|
   decorator = decorators[i % decorators.size]
@@ -282,7 +274,7 @@ add_ons = AddOn.active.order(:id).to_a
 puts "Seeding addresses..."
 
 LABELS  = %w[Home Work Parents Vacation].freeze
-STREETS = ["MG Road", "Park Street", "Linking Road", "FC Road", "Brigade Road"].freeze
+STREETS = [ "MG Road", "Park Street", "Linking Road", "FC Road", "Brigade Road" ].freeze
 STATES  = %w[MH KA TN DL TS GJ WB RJ].freeze
 
 customers.each_with_index do |user, i|
@@ -291,7 +283,7 @@ customers.each_with_index do |user, i|
     Address.find_or_create_by!(user: user, label: label) do |a|
       a.recipient_name = user.full_name
       a.line1          = "#{(i + 1) * 10 + n} #{pick(STREETS)}"
-      a.line2          = ["Apt 4B", "Bldg 12", nil, "Floor 3", nil].sample(random: RNG)
+      a.line2          = [ "Apt 4B", "Bldg 12", nil, "Floor 3", nil ].sample(random: RNG)
       a.city           = user.city
       a.state          = pick(STATES)
       a.postal_code    = format("%06d", 400_000 + RNG.rand(99_999))
@@ -307,7 +299,7 @@ end
 # ---------------------------------------------------------------------------
 puts "Seeding payment methods..."
 
-WALLETS = ["Paytm Wallet", "Amazon Pay", "PhonePe Wallet"].freeze
+WALLETS = [ "Paytm Wallet", "Amazon Pay", "PhonePe Wallet" ].freeze
 
 customers.first(30).each_with_index do |user, i|
   %i[card upi wallet].each_with_index do |kind, j|
@@ -344,11 +336,11 @@ end
 # ---------------------------------------------------------------------------
 puts "Seeding bookings..."
 
-EVENT_TYPES = ["Wedding", "Sangeet", "Mehendi", "Haldi", "Reception", "Birthday", "Anniversary", "Corporate", "Product Launch", "Baby Shower"].freeze
+EVENT_TYPES = [ "Wedding", "Sangeet", "Mehendi", "Haldi", "Reception", "Birthday", "Anniversary", "Corporate", "Product Launch", "Baby Shower" ].freeze
 TIME_SLOTS  = %w[10:00-14:00 14:00-18:00 18:00-22:00 19:00-23:00].freeze
-VENUES      = ["Taj Banquet Hall", "Marriott Grand", "The Leela Palace", "JW Marriott", "Hyatt Regency", "ITC Maratha", "The Westin", "Radisson Blu"].freeze
-VENUE_STREETS = ["MG Road", "Linking Road", "FC Road", "Park Street", "SG Highway"].freeze
-INSTRUCTIONS  = ["Please use pastel palette", "Allergic to lilies", "Vegan menu preferred", nil, nil].freeze
+VENUES      = [ "Taj Banquet Hall", "Marriott Grand", "The Leela Palace", "JW Marriott", "Hyatt Regency", "ITC Maratha", "The Westin", "Radisson Blu" ].freeze
+VENUE_STREETS = [ "MG Road", "Linking Road", "FC Road", "Park Street", "SG Highway" ].freeze
+INSTRUCTIONS  = [ "Please use pastel palette", "Allergic to lilies", "Vegan menu preferred", nil, nil ].freeze
 
 40.times do |i|
   reference = format("DMS-SEED%04d", i + 1)
@@ -374,11 +366,11 @@ INSTRUCTIONS  = ["Please use pastel palette", "Allergic to lilies", "Vegan menu 
 
     status, payment_status, cancelled_at, cancellation_reason =
       if days_offset >= 0
-        i.even? ? [:upcoming, :paid, nil, nil] : [:upcoming, :pending, nil, nil]
+        i.even? ? [ :upcoming, :paid, nil, nil ] : [ :upcoming, :pending, nil, nil ]
       elsif (i % 4) == 3 && (i % 8).zero?
-        [:cancelled, :refunded, Time.current - 10.days, "Plans changed"]
+        [ :cancelled, :refunded, Time.current - 10.days, "Plans changed" ]
       else
-        [:completed, :paid, nil, nil]
+        [ :completed, :paid, nil, nil ]
       end
 
     b.user      = user
@@ -437,7 +429,7 @@ Booking.completed.order(:id).limit(30).each_with_index do |booking, i|
     r.user            = booking.user
     r.decorator       = booking.decorator
     r.design          = booking.design
-    r.rating          = [3, 4, 4, 5, 5, 5][i % 6]
+    r.rating          = [ 3, 4, 4, 5, 5, 5 ][i % 6]
     r.comment         = REVIEW_COMMENTS[i % REVIEW_COMMENTS.size]
     r.tags            = pick_n(REVIEW_TAGS, 2 + RNG.rand(3))
     r.would_recommend = (i % 7) != 0
